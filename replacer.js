@@ -241,7 +241,7 @@ chrome.storage.local.get(['extensionEnabled'], (result) => {
     const randomIndex = Math.floor(Math.random() * replacementWords.length);
     // pull the random word out of the replacemnt word array
     let loremWord = replacementWords[randomIndex];
-    
+
     // if the input word was capitalized
     if (word === word.toUpperCase()) {
       // if the first word is capitalized, capitalize the replacement word
@@ -288,9 +288,10 @@ chrome.storage.local.get(['extensionEnabled'], (result) => {
           node.nodeType === Node.TEXT_NODE
         ) {
           node.textContent = node.textContent.replace(
-            // this regex is alien to me, i cheated to get this, who the fuck knows what it is doing
-            // /\b(?!\d)\w+\b/g,
-            /\b\w+\b/g, // (I am trying aless complcated version)
+            // \b – Word boundary (ensures it's a standalone word).
+            // [a-zA-Z]+ – Matches only letters, avoiding digits.
+            // \b – Another word boundary.
+            /\b[a-zA-Z]+\b/g,
             // anyhow, if we find a match, swap it with a lorem word
             getLorem
           );
