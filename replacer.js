@@ -249,8 +249,7 @@ chrome.storage.local.get(['extensionEnabled'], (result) => {
       // if the first letter of the word is capitalized,
     } else if (word[0] === word[0].toUpperCase()) {
       // capitalize the first letter of the replacement (append the first letter to the rest)
-      loremWord =
-        loremWord.charAt(0).toUpperCase() + loremWord.slice(1).toLowerCase();
+      loremWord = loremWord[0].toUpperCase() + loremWord.slice(1).toLowerCase();
       // otherwise
     } else {
       // replace the lowercase word with a lowercase replacment word
@@ -319,4 +318,3 @@ chrome.storage.local.get(['extensionEnabled'], (result) => {
 // Future considerations after MVP is built:
 // we could always replace titles with the classic "Lorem ipsum set dolor" text
 // potential for other modes, like gen-z slang insertion, or klingon, etc
-// long input words are being replaced by tiny lorem words. we could probably match similar length words
