@@ -1,4 +1,4 @@
-// this is breaking something:
+// this is breaking something: 
 // Inline speculation rules cannot currently be modified after they are processed.
 // Instead, a new <script> element must be inserted.
 chrome.storage.local.get(['extensionEnabled'], (result) => {
@@ -261,7 +261,7 @@ chrome.storage.local.get(['extensionEnabled'], (result) => {
 
   // make a function to replace text nodes
   function replaceText() {
-    console.log('replaceText function invoked!');
+    // console.log('replaceText function invoked!');
     // assign the body element to the body constant
     const body = document.body;
     // create an empty queue object
@@ -269,7 +269,7 @@ chrome.storage.local.get(['extensionEnabled'], (result) => {
     // check if the body object contains child nodes
     if (body.childNodes) {
       // for each child node in the body
-      console.log('Child node found!');
+      // console.log('Child node found!');
       body.childNodes.forEach((child) => {
         // push them to the queue
         queue.push(child);
