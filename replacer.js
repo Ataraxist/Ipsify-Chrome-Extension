@@ -32,7 +32,8 @@ chrome.storage.local.get(['extensionEnabled'], (result) => {
     }
     // truncate the replacement word to match the length of the source word if its too long (for buttons and stuff)
     if (loremWord.length > word.length) {
-      loremWord = loremWord.substring(0, word.length);
+      // +1 because there are no 1 letter lorem words... seems to work ok this way.
+      loremWord = loremWord.substring(0, word.length + 1);
     }
     // return the replaced word
     return loremWord;
@@ -61,9 +62,9 @@ chrome.storage.local.get(['extensionEnabled'], (result) => {
       // aight, so first we ignore hidden nodes
       if (node.hidden != true) {
         if (
-          // then we only get valid nodes, notable node type 3 and TEXT_NODE for old browsers
-          node.nodeType === 3 || //& (node.textContent != '') ||
-          node.nodeType === Node.TEXT_NODE //& (node.textContent != '')
+          // then we only get valid nodes, notably node type 3 and TEXT_NODE for old browsers
+          node.nodeType === 3 ||
+          node.nodeType === Node.TEXT_NODE
         ) {
           node.textContent = node.textContent.replace(
             // this regex is alien to me, i cheated to get this, who the fuck knows what it is doing
@@ -95,3 +96,4 @@ chrome.storage.local.get(['extensionEnabled'], (result) => {
 // Future considerations after MVP is built:
 // we could always replace titles with the classic "Lorem ipsum set dolor" text
 // potential for other modes, like gen-z slang insertion, or klingon, etc
+// long input words are being replaced by tiny lorem words. we could probably match similar length words
