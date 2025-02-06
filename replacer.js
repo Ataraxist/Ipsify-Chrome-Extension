@@ -1,5 +1,5 @@
 // this is breaking something:
-// Inline speculation rules cannot currently be modified after they are processed. 
+// Inline speculation rules cannot currently be modified after they are processed.
 // Instead, a new <script> element must be inserted.
 chrome.storage.local.get(['extensionEnabled'], (result) => {
   if (!result.extensionEnabled) return;
@@ -62,11 +62,11 @@ chrome.storage.local.get(['extensionEnabled'], (result) => {
       if (node.hidden != true) {
         if (
           // then we only get valid nodes, notable node type 3 and TEXT_NODE for old browsers
-          (node.nodeType === 3) & (node.textContent != '') ||
-          (node.nodeType === Node.TEXT_NODE) & (node.textContent != '')
+          node.nodeType === 3 || //& (node.textContent != '') ||
+          node.nodeType === Node.TEXT_NODE //& (node.textContent != '')
         ) {
           node.textContent = node.textContent.replace(
-            // this regex is alien to me, i cheated to get this, who the fuck know what it is doing
+            // this regex is alien to me, i cheated to get this, who the fuck knows what it is doing
             /\b(?!\d)\w+\b/g,
             // anyhow, if we find a match, swap it with a lorem word
             getLorem
@@ -93,9 +93,5 @@ chrome.storage.local.get(['extensionEnabled'], (result) => {
 // is legitimatly useful if you want to quickly hide real-data for demo purposes
 
 // Future considerations after MVP is built:
-// we could end the substring at the next space insted of cutting off in the middle of words to make it look nicer
 // we could always replace titles with the classic "Lorem ipsum set dolor" text
-// some nodes could have invisible text, and we should probably acocunt for that (use node.nodeValue.trim() !== "" to dodge invisible text nodes?)
-// there might be a larger source for ipsum text we could use
 // potential for other modes, like gen-z slang insertion, or klingon, etc
-// way to toggle on and off
