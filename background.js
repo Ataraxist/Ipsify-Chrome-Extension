@@ -17,6 +17,20 @@ chrome.action.onClicked.addListener((tab) => {
           chrome.tabs.reload(tab.id);
         }
       );
+      // set the icon based on the new state
+      const iconPath = isEnabled
+        ? {
+            16: 'disabled16.png',
+            48: 'disabled48.png',
+            128: 'disabled128.png',
+          }
+        : {
+            16: 'enabled16.png',
+            48: 'enabled48.png',
+            128: 'enabled128.png',
+          };
+
+      chrome.action.setIcon({ path: iconPath });
     });
   });
 });
