@@ -1,49 +1,91 @@
-// start with a huge lorem ipsum text string saved as a string variable
+// this is breaking something:
+// Inline speculation rules cannot currently be modified after they are processed. 
+// Instead, a new <script> element must be inserted.
+chrome.storage.local.get(['extensionEnabled'], (result) => {
+  if (!result.extensionEnabled) return;
 
-const ipsumText = `Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt, explicabo. Nemo enim ipsam voluptatem, quia voluptas sit, aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos, qui ratione voluptatem sequi nesciunt, neque porro quisquam est, qui dolorem ipsum, quia dolor sit amet consectetur adipiscing velit, sed quia non numquam do eius modi tempora incididunt, ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrumd exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? D'Quis autem vel eum irure reprehenderit, qui in ea voluptate velit esse, quam nihil molestiae consequatur, vel illum, qui dolorem eum fugiat, quo voluptas nulla pariatur? At vero eos et accusamus et iusto odio dignissimos ducimus, qui blanditiis praesentium voluptatum deleniti atque corrupti, quos dolores et quas molestias excepturi sint, obcaecati cupiditate non provident, similique sunt in culpa, qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerudum facilis est ert expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio, cumque nihil impedit, quo minus id, quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendaus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet, ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.`;
+  // start with a huge lorem ipsum text string saved as a string variable
+  const ipsumText = `Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt, explicabo. Nemo enim ipsam voluptatem, quia voluptas sit, aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos, qui ratione voluptatem sequi nesciunt, neque porro quisquam est, qui dolorem ipsum, quia dolor sit amet consectetur adipiscing velit, sed quia non numquam do eius modi tempora incididunt, ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrumd exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? D'Quis autem vel eum irure reprehenderit, qui in ea voluptate velit esse, quam nihil molestiae consequatur, vel illum, qui dolorem eum fugiat, quo voluptas nulla pariatur? At vero eos et accusamus et iusto odio dignissimos ducimus, qui blanditiis praesentium voluptatum deleniti atque corrupti, quos dolores et quas molestias excepturi sint, obcaecati cupiditate non provident, similique sunt in culpa, qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerudum facilis est ert expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio, cumque nihil impedit, quo minus id, quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendaus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet, ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.`;
 
-// declare a function to get a length of replacement text
-function getLorem(string) {
-  // get the length of the input text
-  let length = string.length;
-  // return a length of lorem text to replace it with
-  return ipsumText.substring(0, length);
-}
+  // declare a function to get a length of replacement text
+  function getLorem(word) {
+    // split the ipsum text into words using regex i dont understand
+    const ipsumWords = ipsumText.split(/\s+/);
+    // generate a random index to select a word
+    const randomIndex = Math.floor(Math.random() * ipsumWords.length);
+    // get the lorem word
+    let loremWord = ipsumWords[randomIndex];
 
-// make a function to replace text nodes
-function replaceText() {
-  // create an empty queue object
-  const queue = [];
-  // assign the body element to the body constant
-  const body = document.getElementsByTagName('body');
-  // check if the body object contains chil nodes
-  if (body[0].childNodes) {
-    // for each child node in the body
-    body[0].childNodes.forEach((child) => {
-      // push them to the queue
-      queue.push(child);
-    });
-  }
-  // while the queue is not empty
-  while (queue.length > 0) {
-    // set the current node to process to the first node, and remove it from the queue
-    const node = queue.shift();
-    // if the node is a text node
-    //node.nodeType === Node.TEXT_NODE
-    if (node.innerText) {
-      console.log('Entered the conditional!');
-      // assign the node's text value to the evaluated result of the get lorum function
-      node.innerText = getLorem(node.innerText);
+    // if the input word was capitalized
+    if (word === word.toUpperCase()) {
+      // , capitalize the replacement word
+      loremWord = loremWord.toUpperCase();
+      // if the first letter of the word is capitalized,
+    } else if (word[0] === word[0].toUpperCase()) {
+      // capitalize the first letter of the replacement (append the first letter to the rest)
+      loremWord =
+        loremWord.charAt(0).toUpperCase() + loremWord.slice(1).toLowerCase();
+      // otherwise
+    } else {
+      // replace the lowercase word with a lowercase replacment word
+      loremWord = loremWord.toLowerCase();
     }
-    //if node has children, add them to queue
-    if (node.childNodes) {
-      node.childNodes.forEach((child) => {
+    // truncate the replacement word to match the length of the source word if its too long (for buttons and stuff)
+    if (loremWord.length > word.length) {
+      loremWord = loremWord.substring(0, word.length);
+    }
+    // return the replaced word
+    return loremWord;
+  }
+
+  // make a function to replace text nodes
+  function replaceText() {
+    console.log('replaceText function invoked!');
+    // assign the body element to the body constant
+    const body = document.body;
+    // create an empty queue object
+    const queue = [];
+    // check if the body object contains child nodes
+    if (body.childNodes) {
+      // for each child node in the body
+      console.log('Child node found!');
+      body.childNodes.forEach((child) => {
+        // push them to the queue
         queue.push(child);
       });
     }
+    // while the queue is not empty
+    while (queue.length > 0) {
+      // set the current node to process to the first node, and remove it from the queue
+      const node = queue.shift();
+      // aight, so first we ignore hidden nodes
+      if (node.hidden != true) {
+        if (
+          // then we only get valid nodes, notable node type 3 and TEXT_NODE for old browsers
+          (node.nodeType === 3) & (node.textContent != '') ||
+          (node.nodeType === Node.TEXT_NODE) & (node.textContent != '')
+        ) {
+          node.textContent = node.textContent.replace(
+            // this regex is alien to me, i cheated to get this, who the fuck know what it is doing
+            /\b(?!\d)\w+\b/g,
+            // anyhow, if we find a match, swap it with a lorem word
+            getLorem
+          );
+        }
+      }
+      // check to see if there are child nodes
+      if (node.hasChildNodes()) {
+        // for each child
+        for (const child of node.childNodes) {
+          // slam it in the queue
+          queue.push(child);
+        }
+      }
+    }
   }
-}
-
+  // without this line, there is no initial execution
+  replaceText();
+});
 // Will this get us points?
 // uses a queue data structure to process nodes from outside in
 // uses tree traversal to find the nodes to replace text in
@@ -51,15 +93,9 @@ function replaceText() {
 // is legitimatly useful if you want to quickly hide real-data for demo purposes
 
 // Future considerations after MVP is built:
-// what happens if we are replacing more text than we have stored in ipsumText
-// we should probably capitalize the first letter of the replacement text
-// we could adhead to the capitalization rules of the existing text
 // we could end the substring at the next space insted of cutting off in the middle of words to make it look nicer
 // we could always replace titles with the classic "Lorem ipsum set dolor" text
 // some nodes could have invisible text, and we should probably acocunt for that (use node.nodeValue.trim() !== "" to dodge invisible text nodes?)
 // there might be a larger source for ipsum text we could use
 // potential for other modes, like gen-z slang insertion, or klingon, etc
 // way to toggle on and off
-
-// use an event listener to make sure the dom loads first
-document.addEventListener('DOMContentLoaded', replaceText);
