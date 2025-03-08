@@ -3,17 +3,11 @@
   "name": "Image Scrape",
   "version": "1.0",
   "description": "Click Button to get images",
-  "permissions": ["scripting", "storage"],
+  "permissions": ["scripting", "downloads", "activeTab", "notifications"],
   "host_permissions": ["<all_urls>"],
   "background": {
     "service_worker": "background.js"
   },
-  "content_scripts": [
-    {
-      "matches": ["<all_urls>"],
-      "js": ["scraper.js"]
-    }
-  ],
   "action": {
     "default_title": "Scraper",
     "default_icon": {
